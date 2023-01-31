@@ -49,11 +49,30 @@
 
     var marker, circle;
 
+    var mysql = require('mysql');
+
+    var con = mysql.createConnection({
+       host: "rm-l4v670ce623mi4fxv.mysql.me-central-1.rds.aliyuncs.com",
+       user: "amb",
+       password: "No123456",
+       database: "demodb"
+    });
+
     function getPosition(position){
         // console.log(position)
         var lat = position.coords.latitude
         var long = position.coords.longitude
         var accuracy = position.coords.accuracy
+
+        con.connect(function(err) {
+          if (err) throw err;
+          console.log("Connected!");
+          var sql = "UPDATE ambulances SET Ambulance_latitude = lat, Ambulance_longitude = long WHERE id_ambulance = '001'";
+          con.query(sql, function (err, result) {
+           if (err) throw err;
+            console.log("1 record inserted");
+           });
+        });
 
         if(marker) {
             map.removeLayer(marker)
